@@ -15,7 +15,7 @@ const ProductUpdate = (props) => {
 
 
     useEffect(() => {
-        fetch("http://localhost:8081/product/detail/"+id,{
+        fetch("http://localhost:8081/product-service/product/detail/"+id,{
             method: "GET" ,
             headers: {
                 "Content-Type": "application/json",
@@ -39,7 +39,7 @@ const ProductUpdate = (props) => {
     const submitProductUpdate = (e) =>{
         e.preventDefault(); 
 
-        fetch("http://localhost:8081/product/update/"+id,
+        fetch("http://localhost:8081/product-service/product/update/"+id,
         { 
             method : "PUT", 
             headers: {

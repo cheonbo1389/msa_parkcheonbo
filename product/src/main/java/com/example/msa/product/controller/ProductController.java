@@ -19,10 +19,7 @@ public class ProductController {
         this.productService = productService;
     }
 
-
-    //매개변수 추가 =>  @RequestHeader("X-User-Id") String userId) => ApiGateway에서 헤더로 넘긴 X-user-Id임
-    //dto에 상품명, 상품수량등이 들어있고, userId는 apigateway에서 넘어온 값을 가지고
-    //누가 어떤 상품을 등록했는지 간단하게 save시킬수 있다.
+    //제품 추가
     @PostMapping("/create")
     public ResponseEntity<?> productCreate(@RequestBody ProductRegisterDto dto, @RequestHeader("X-User-Id") String userId){
         System.out.println("<<< ProductController - /create >>>");
@@ -30,6 +27,16 @@ public class ProductController {
         Product product = productService.productCreate(dto, userId);
         return new ResponseEntity<>(product.getId(), HttpStatus.CREATED);
     }
+
+
+    //제품 전체 조회
+    @GetMapping("/list")
+    public ResponseEntity<?> productList(){
+        System.out.println("<<< ProductController - /list >>>");
+
+        return new ResponseEntity<>(productService.productAllList(),HttpStatus.OK);
+    }
+
 
     //재고조회 API
     @GetMapping("{id}")
@@ -49,5 +56,32 @@ public class ProductController {
         Product product = productService.updateStockQuantity(productUpdateStockDto);
 
         return new ResponseEntity<>(product.getId(), HttpStatus.OK);
+    }
+
+
+    //제품 상세 조회
+    @GetMapping("/detail/{id}")
+    public ResponseEntity<?> productDetail(@PathVariable Long id){
+        System.out.println("<<< ProductController - /detail >>>");
+
+        return new ResponseEntity<>(productService.productDeatail(id),HttpStatus.OK);
+    }
+
+    //제품 수정
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> productUpdate(@RequestBody Product dto){
+        System.out.println("<<< ProductController - /update >>>");
+
+        Product product = productService.productUpdate(dto);
+        return new ResponseEntity<>(product.getId(), HttpStatus.OK);
+    }
+
+
+    //유저가 추가한 제품 조회
+    @GetMapping("/mylist")
+    public ResponseEntity<?> myproductList(@RequestHeader("X-User-Id") String userId){
+        System.out.println("<<< ProductController - /mylist >>>");
+
+        return new ResponseEntity<>(productService.myproductList(userId),HttpStatus.OK);
     }
 }

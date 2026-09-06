@@ -12,7 +12,7 @@ const UpdateMyinfo = () => {
 
 
     useEffect(() => {
-        fetch("http://localhost:8081/member/mypage",{
+        fetch("http://localhost:8081/member-service/member/mypage",{
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -35,7 +35,7 @@ const UpdateMyinfo = () => {
     const myinfoUpdate = (e) => {
         e.preventDefault(); 
 
-        fetch("http://localhost:8081/member/updatemyinfo",
+        fetch("http://localhost:8081/member-service/member/updatemyinfo",
         { 
             method : "PUT", 
             headers: {

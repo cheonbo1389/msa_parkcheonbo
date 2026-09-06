@@ -5,6 +5,7 @@ import { Button, Container, Form, Card} from 'react-bootstrap';
 const OrderCreate = () => {
     const propsParam = useParams(); 
     const navigate = useNavigate(); 
+    const token = localStorage.getItem("Token");
 
     const [seller, setSeller] = useState('');
     const [product, setProduct ] = useState({
@@ -28,12 +29,32 @@ const OrderCreate = () => {
     }
 
     useEffect(() => {
-            fetch("http://localhost:8081/product/detail/"+order.productId)
-
+            fetch("http://localhost:8081/product-service/product/detail/"+order.productId,{
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+            }) 
             .then((res) => res.json())
             .then((res) => {
+                console.log(res);
+                
                 setProduct(res);
-                setSeller(res.member.name);
+                
+            fetch("http://localhost:8081/member-service/member/mypage",{
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+            }) 
+            .then(res2 => res2.json())
+            .then(res2 => {
+                console.log(res2);
+                
+                setSeller(res2); 
+            });
             })
     }, []);
 
@@ -41,7 +62,7 @@ const OrderCreate = () => {
         e.preventDefault();
         const token = localStorage.getItem("Token");
 
-        fetch("http://localhost:8081/ordering/create", {
+        fetch("http://localhost:8081/ordering-service/ordering/create", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -71,6 +92,8 @@ const OrderCreate = () => {
     return (
         <div>
             <Container>
+            {product && seller && order && (
+                    <>
                 <br />
                 <h3>제품 주문</h3>
                 <Form onSubmit={submitOrder}>
@@ -82,7 +105,7 @@ const OrderCreate = () => {
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="ProductSeller">
-                                <Form.Label>판매자 : {seller}</Form.Label>
+                                <Form.Label>판매자 : {seller.name}</Form.Label>
                             </Form.Group>
 
                             <Form.Group className="mb-3" controlId="ProductPrice">
@@ -100,6 +123,7 @@ const OrderCreate = () => {
                         주문
                     </Button>
                 </Form> 
+                </>)}
             </Container>
         </div>
     );

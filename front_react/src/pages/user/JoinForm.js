@@ -23,7 +23,7 @@ const JoinForm = (props) => {
     const submitRegister = (e) =>{
         e.preventDefault();
 
-        fetch("http://localhost:8081/member/create",
+        fetch("http://localhost:8081/member-service/member/create",
         { 
           method : "POST",
           headers : {

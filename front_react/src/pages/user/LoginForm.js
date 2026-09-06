@@ -23,7 +23,7 @@ const LoginForm = (props) => {
     const submitLogin = (e) =>{
         e.preventDefault();
         
-        fetch("http://localhost:8081/member/doLogin",
+        fetch("http://localhost:8081/member-service/member/doLogin",
         { 
           method : "POST",
           headers : {

@@ -12,6 +12,8 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+
 @Service
 @Transactional
 public class ProductService {
@@ -24,7 +26,6 @@ public class ProductService {
     public Product productCreate(ProductRegisterDto dto, String userId){
         System.out.println("<<< ProductService - 제품등록 >>>");
 
-//        Product product = productRepository.save(dto.toEntity(member));
         //dto를 Member로 변환
         Product product = productRepository.save(dto.toEntity(Long.parseLong(userId)));
 
@@ -52,8 +53,6 @@ public class ProductService {
     }
 
     //상품재고 업데이트 API
-    //productUpdateStockDto에 id, 감소시킬 수량을 넣어, 요청이 들어오면 product 객체를 찾아서
-    //감소시키고자 하는 수량을 뺀 값을 세팅한다.
     public Product updateStockQuantity(ProductUpdateStockDto productUpdateStockDto){
         System.out.println("<<< ProductService - 상품재고 업데이트 >>>");
         Product product = productRepository.findById(productUpdateStockDto.getProductId())
@@ -66,8 +65,24 @@ public class ProductService {
         return product;
     }
 
-    // listener 객체가 실시간으로 update-stock-topic을 바라보고 있다가
-    // 메시지가 들어오면 아래 매개변수 message에 주입된다.
+
+
+    //제품 상세 조회
+    public Product productDeatail(Long id){
+        System.out.println("<<< ProductService - productDeatail >>>");
+
+        return productRepository.findById(id).get();
+    }
+
+    //제품 전체 조회
+    public ArrayList<Product> productAllList(){
+        System.out.println("<<< ProductService - productAllList >>>");
+
+        return (ArrayList<Product>) productRepository.findAll();
+    }
+
+
+
     @KafkaListener(topics = "update-stock-topic", containerFactory = "kafkaListener")
     public void stockConsumer(String message){
         System.out.println(message); //{"productId : 1, productQuantity : 1"}
@@ -88,4 +103,21 @@ public class ProductService {
         //즉, order 호출할때마다 product 재고가 1씩 감소
         this.updateStockQuantity(dto);
     }
+
+
+    //제품 수정
+    public Product productUpdate(Product dto){
+        System.out.println("<<< ProductService - productUpdate >>>");
+
+        return productRepository.save(dto);
+    }
+
+
+    //내가 추가한 제품 조회
+    public ArrayList<Product> myproductList(String userId){
+        System.out.println("<<< ProductService - myproductList >>>");
+
+        return productRepository.findByMemberId(Long.parseLong(userId));
+    }
+
 }

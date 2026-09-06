@@ -18,9 +18,6 @@ public class Ordering extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 모노리식에서는 Member 객체를 참조하지만, 데이터베이스에서는 member_id가 들어감
-    // msa에서는 @JoinColumn이 무의미
-    // ordering 서비스에서 ordering 테이블 조회시 member_id 로 member를 조회
     @Column(nullable = false)
     private Long memberId;
 

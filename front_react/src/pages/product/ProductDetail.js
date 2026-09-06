@@ -9,22 +9,37 @@ const ProductDetail = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem("Token");
 
-    const [productList, setProductList] = useState([]);
-    const [member, setMember] = useState([]);
+    const [productList, setProductList] = useState(null);
+    const [member, setMember] =  useState(null);
 
 
     useEffect(() => {
-        fetch("http://localhost:8081/product/detail/"+id,{
+        fetch("http://localhost:8081/product-service/product/detail/"+id,{
             method: "GET" ,
             headers: {
-                "Content-Type": "application/json",
+                "Content-Type": "application/json"
+                ,"Authorization": `Bearer ${token}`
             }
         }) 
         .then(res => res.json())
         .then(res => {
             console.log(1,res);
-            setProductList(res); 
-            setMember(res.member);
+            setProductList(res);
+            
+
+            fetch("http://localhost:8081/member-service/member/mypage",{
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            }
+            }) 
+            .then(res2 => res2.json())
+            .then(res2 => {
+                console.log(res2);
+                
+                setMember(res2); 
+            });
         });
     }, [])
 
@@ -42,6 +57,8 @@ const ProductDetail = () => {
     return (
         <div>
             <Container>
+                {productList && member && (
+                    <>
                 <br />
                 <h3>{productList.name}의 상세 내용</h3>
                 <Card>
@@ -56,6 +73,8 @@ const ProductDetail = () => {
 
                     </Card.Body>
                 </Card>
+                </>
+                )}
             </Container>
         </div>
     );

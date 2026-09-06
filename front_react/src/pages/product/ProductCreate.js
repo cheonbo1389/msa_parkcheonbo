@@ -23,7 +23,7 @@ const ProductCreate = () => {
         e.preventDefault();
         const token = localStorage.getItem("Token");
         
-        fetch("http://localhost:8081/product/create", {
+        fetch("http://localhost:8081/product-service/product/create", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

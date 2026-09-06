@@ -4,9 +4,11 @@ import com.example.msa.member.domain.Member;
 import com.example.msa.member.dto.LoginDto;
 import com.example.msa.member.dto.MemberSaveReqDto;
 import com.example.msa.member.repository.MemberRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.Optional;
 
@@ -60,5 +62,23 @@ public class MemberService {
         }
 
         return optionalMember.get();
+    }
+
+
+    //마이페이지 - 내정보 조회
+    public Member myinfo(String userId){
+        System.out.println("<<< MemberService - myinfo >>>");
+
+        Member member = memberRepository.findById(Long.valueOf(userId)).get();
+
+        return member;
+    }
+
+
+    //마이페이지 - 내정보 업데이트
+    public Member updatemyinfo(Member member){
+        System.out.println("<<< MemberService - updatemyinfo >>>");
+
+        return memberRepository.save(member);
     }
 }

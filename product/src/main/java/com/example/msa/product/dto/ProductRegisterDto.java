@@ -21,16 +21,6 @@ public class ProductRegisterDto {
     //제품 수량
     private int stockQuantity;
 
-//    //Member 객체를 매개변수로 받아서 Product.build()에 세팅..
-//    //Product 객체를 만들어서 리턴해주는 메서드
-//    public Product toEntity(Member member){
-//        return Product.builder()
-//                .name(this.name)
-//                .price(this.price)
-//                .stockQuantity(this.stockQuantity)
-//                .member(member)
-//                .build();
-//    }
 
     public Product toEntity(Long userId){
         return Product.builder()

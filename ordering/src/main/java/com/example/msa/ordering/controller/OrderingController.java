@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 @RestController
 @RequestMapping("/ordering")
 public class OrderingController {
@@ -30,6 +32,14 @@ public class OrderingController {
         return new ResponseEntity<>(ordering.getId(), HttpStatus.CREATED);
     }
 
+    //유저 본인이 주문한 목록 리스트 조회
+    @GetMapping("/orderingList")
+    public ResponseEntity<?> orderingList(@RequestHeader("X-User-Id") String userId){
+        System.out.println("<<< OrderingController - /orderingList >>>");
 
+        ArrayList<Ordering> orderingList =  orderingService.orderList(userId);
+
+        return new ResponseEntity<>(orderingList, HttpStatus.OK);
+    }
 
 }

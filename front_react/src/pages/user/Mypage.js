@@ -5,6 +5,7 @@ import { Card } from 'react-bootstrap';
 
 const Mypage = () => {
     const token = localStorage.getItem("Token");
+    const refreshToken = localStorage.getItem("refreshToken");
     const navigate = useNavigate();
 
     const [myinfo, setMyinfo] = useState({
@@ -14,7 +15,7 @@ const Mypage = () => {
 
 
     useEffect(() => {
-        fetch("http://localhost:8081/member/mypage",{
+        fetch("http://localhost:8081/member-service/member/mypage",{
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

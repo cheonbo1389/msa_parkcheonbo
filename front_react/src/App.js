@@ -35,8 +35,7 @@ function App() {
           {/* 제품 리스트 */}
           <Route path='/productlist' exact={true} element={<ProductList />} /> 
 
-          {/* 제품 상세 페이지*/}
-          <Route path='/product/:id' exact={true} element={<ProductDetail />} /> 
+
 
 
 
@@ -49,6 +48,9 @@ function App() {
 
           {/* 내정보 수정 페이지 */}
           <Route path='/updatemyinfo' exact={true} element={ <ProtectedRoute><UpdateMyinfo /></ProtectedRoute>} /> 
+
+          {/* 제품 상세 페이지*/}
+          <Route path='/product/:id' exact={true} element={ <ProtectedRoute> <ProductDetail /> </ProtectedRoute>} /> 
 
           {/* 제품 추가 */}
           <Route path='/productcreate' exact={true} element={ <ProtectedRoute><ProductCreate /></ProtectedRoute>} /> 

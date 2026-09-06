@@ -25,7 +25,8 @@ public class JwtAuthFilter implements GlobalFilter {   // neti 기반의 비동�
             "/member/create",
             "/member/doLogin",
             "/member/refresh-token",   // 토큰갱신
-            "/product/list"    // 상품목록은 회원이 아니어도 조회가능하도록
+            "/product/list" ,  // 상품목록은 회원이 아니어도 조회가능하도록
+            "/product/detail/{id}"
     );
 
     // 1) cors(CorsWebFilter) : application.yml    → 2) token검증(GlobalFilter)     →  3) 라우팅 처리(GatewayFilter)
@@ -49,7 +50,7 @@ public class JwtAuthFilter implements GlobalFilter {   // neti 기반의 비동�
                 throw new IllegalArgumentException("token 관련 예외 발생");
             }
             String token = bearerToken.substring(7);  // 토큰에서 Bearer를 제외한 인덱스 7번째 이상부터 가져온다.
-
+            System.out.println("token : "+token);
             // token 검증 및 claims 추출
             // Jwts는 build.gradle에 jwt토큰 관련 라이브러리로 추가되어 있어야 import 가능함 => import io.jsonwebtoken.*; 가능
 

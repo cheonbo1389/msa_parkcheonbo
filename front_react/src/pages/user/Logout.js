@@ -9,7 +9,7 @@ const Logout = () => {
     const navigate = useNavigate();
 
     useEffect(() =>{
-        fetch("http://localhost:8081/member/logout", {
+        fetch("http://localhost:8081/member-service/member/logout", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

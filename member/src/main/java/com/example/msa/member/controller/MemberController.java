@@ -15,10 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,9 +28,6 @@ public class MemberController {
     private final MemberService memberService;
     private final JwtTokenProvider jwtTokenProvider;
 
-//    @Qualifier?
-//    같은 타입의 빈(Bean)이 여러 개 있을 때,
-//    스프링이 어떤 빈을 주입해야 할지 명확히 선택하도록 이름을 지정
     @Qualifier("rtdb")
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -46,6 +40,7 @@ public class MemberController {
         this.redisTemplate = redisTemplate;
     }
 
+    //회원가입
     @PostMapping("/create")
     public ResponseEntity<?> memberCreate(@RequestBody MemberSaveReqDto memberSaveReqDto){
         System.out.println("<<< MemberController - /create >>>");
@@ -54,21 +49,18 @@ public class MemberController {
         return new ResponseEntity<>(memberId, HttpStatus.CREATED);
     }
 
+    //로그인
     @PostMapping("/doLogin")
     public ResponseEntity<?> doLogin(@RequestBody LoginDto dto){
         System.out.println("<<< MemberController - /doLogin >>>");
 
-        //        email,password 검증
         Member member = memberService.login(dto);
 
-//        토큰 생성 및 return
         String token = jwtTokenProvider.createToken(member.getId().toString(), member.getRole().toString());
         String refreshToken = jwtTokenProvider.createRefreshToken(member.getEmail(), member.getRole().toString());
 
-//        redis에 rt 저장
         redisTemplate.opsForValue().set(member.getEmail(), refreshToken, 200, TimeUnit.DAYS);
 
-//        사용자에게 at, rt 지급
         Map<String, Object> loginInfo = new HashMap<>();
         loginInfo.put("id", member.getId());
         loginInfo.put("token", token);
@@ -76,6 +68,52 @@ public class MemberController {
 
         return new ResponseEntity<>(loginInfo, HttpStatus.OK);
     }
+
+
+    //마이페이지
+    @GetMapping("/mypage")
+    public ResponseEntity<?> mypage_myinfo(@RequestHeader("X-User-Id") String userId){
+        System.out.println("<<< MemberController - /mypage_myinfo >>>");
+
+        return new ResponseEntity<>(memberService.myinfo(userId), HttpStatus.OK);
+    }
+
+    //유저 정보 수정
+    @PutMapping("/updatemyinfo")
+    public ResponseEntity<?> updateMyinfo(@RequestBody Member member) {
+        System.out.println("<<< MemberController - /updateMyinfo >>>");
+
+        return new ResponseEntity<>(memberService.updatemyinfo(member), HttpStatus.OK);
+    }
+
+    //로그아웃
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestBody MemberRefreshDto token) {
+        System.out.println("<<< MemberController - /logout >>>");
+
+
+        // rt 디코딩 후 email 추출
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(secretKeyRt)
+                .build()
+                .parseClaimsJws(token.getRefreshToken())
+                .getBody();
+
+
+        String email = claims.getSubject();
+
+        //rt를 redis의 rt 비교 검증
+        Object rt = redisTemplate.opsForValue().get(claims.getSubject());
+        if (rt == null || !rt.toString().equals(token.getRefreshToken())){
+            return new ResponseEntity<>((Object) null, HttpStatus.BAD_REQUEST);
+        }
+
+        // Redis에서 Refresh Token 삭제
+        redisTemplate.delete(email);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 
     @PostMapping("/refresh-token")

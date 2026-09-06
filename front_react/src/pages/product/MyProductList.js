@@ -9,7 +9,7 @@ const MyProductList = () => {
     const [productList, setProductList] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:8081/product/mylist",{
+        fetch("http://localhost:8081/product-service/product/mylist",{
             method: "GET" ,
             headers: {
                 "Content-Type": "application/json",

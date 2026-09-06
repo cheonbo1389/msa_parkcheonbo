@@ -8,7 +8,7 @@ const OrderList = () => {
     const [orderList, setOrderList] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:8081/ordering/orderingList",{
+        fetch("http://localhost:8081/ordering-service/ordering/orderingList",{
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -17,6 +17,8 @@ const OrderList = () => {
         }) 
         .then(res => res.json())
         .then(res => {
+            console.log(res);
+            
             setOrderList(res); 
         });
     }, [])
@@ -24,12 +26,15 @@ const OrderList = () => {
     return (
         <div>
             <Container> 
-                <br />
-                <h3>주문 목록</h3>
-                <br />
-                {orderList.map(order => 
-                    <OrderItem key={order.id} order={order} /> )
-                }
+                {orderList &&  (
+                        <>
+                    <br />
+                    <h3>주문 목록</h3>
+                    <br />
+                    {orderList.map(order => 
+                        <OrderItem key={order.id} order={order} /> )
+                    }
+                </> )}
             </Container>
         </div>
     );
