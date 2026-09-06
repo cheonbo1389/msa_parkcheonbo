@@ -18,7 +18,7 @@ public class OrderingController {
         this.orderingService = orderingService;
     }
 
-    //매개변수 추가 =>  @RequestHeader("X-User-Id") String userId) => ApiGateway에서 헤더로 넘긴 X-user-Id임
+    //주문 생성
     @PostMapping("/create")
     public ResponseEntity<?> orderCreate(@RequestBody OrderCreateDto dtos, @RequestHeader("X-User-Id") String userId){
         System.out.println("<<< OrderingController - /create >>>");

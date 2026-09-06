@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 
 @Service
-@Transactional //메시지 단에서 에러가 발생하면 롤백되도록 처리
+@Transactional
 public class OrderingService {
     private final OrderingRepository orderingRepository;
 

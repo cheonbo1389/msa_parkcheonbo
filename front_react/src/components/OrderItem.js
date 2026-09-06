@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 
 const OrderItem = (props) => {
     const  { id, quantity, productId  } = props.order
-    // const productname = props.order.product.name
     const token = localStorage.getItem("Token");
     const [product, setProduct ] = useState({})
     const price = (product.price)*quantity;

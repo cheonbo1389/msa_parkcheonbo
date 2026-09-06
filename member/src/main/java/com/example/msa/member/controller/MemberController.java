@@ -91,24 +91,19 @@ public class MemberController {
     public ResponseEntity<?> logout(@RequestBody MemberRefreshDto token) {
         System.out.println("<<< MemberController - /logout >>>");
 
-
-        // rt 디코딩 후 email 추출
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secretKeyRt)
                 .build()
                 .parseClaimsJws(token.getRefreshToken())
                 .getBody();
 
-
         String email = claims.getSubject();
 
-        //rt를 redis의 rt 비교 검증
         Object rt = redisTemplate.opsForValue().get(claims.getSubject());
         if (rt == null || !rt.toString().equals(token.getRefreshToken())){
             return new ResponseEntity<>((Object) null, HttpStatus.BAD_REQUEST);
         }
 
-        // Redis에서 Refresh Token 삭제
         redisTemplate.delete(email);
 
         return new ResponseEntity<>(HttpStatus.OK);
