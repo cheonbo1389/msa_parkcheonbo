@@ -25,8 +25,7 @@ public class JwtAuthFilter implements GlobalFilter {   // neti 기반의 비동�
             "/member/create",
             "/member/doLogin",
             "/member/refresh-token",   // 토큰갱신
-            "/product/list" ,  // 상품목록은 회원이 아니어도 조회가능하도록
-            "/product/detail/{id}"
+            "/product/list"  // 상품목록은 회원이 아니어도 조회가능하도록
     );
 
     // 1) cors(CorsWebFilter) : application.yml    → 2) token검증(GlobalFilter)     →  3) 라우팅 처리(GatewayFilter)
