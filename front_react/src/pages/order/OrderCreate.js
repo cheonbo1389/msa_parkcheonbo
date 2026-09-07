@@ -111,6 +111,10 @@ const OrderCreate = () => {
                             <Form.Group className="mb-3" controlId="ProductPrice">
                                 <Form.Label>개당 가격 : {product.price} </Form.Label>
                             </Form.Group>
+
+                            <Form.Group className="mb-3" controlId="ProductstockQuantity">
+                                <Form.Label>남은 재고 : {product.stockQuantity} </Form.Label>
+                            </Form.Group>
                         </Container>
                     </Card>
                             
